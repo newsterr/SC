@@ -60,7 +60,14 @@ a:hover {
 	text-decoration: none;
   color: #57b846;
 }
-
+.small-image {
+    width: 100px;
+    height: auto;
+}
+.centered-block {
+    text-align: center;
+    padding: 10px;
+}
 /*---------------------------------------------*/
 h1,h2,h3,h4,h5,h6 {
 	margin: 0px;

@@ -23,18 +23,6 @@
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="{{ url_for('static', filename='images/img-01.png') }}" alt="IMG">
                 </div>
-
-                <div>
-                    <h3>เงื่อนไขรหัสผ่าน</h3>
-                        <ul>
-                            <li>ต้องมีความยาวอย่างน้อย 7 ตัวอักษร</li>
-                            <li>ต้องมีตัวอักษรตัวเล็ก (a-z)</li>
-                            <li>ต้องมีตัวอักษรตัวใหญ่ (A-Z)</li>
-                            <li>ต้องมีตัวเลข (0-9)</li>
-                            <li>ต้องมีสัญลักษณ์พิเศษ เช่น !@#$%^&*</li>
-                        </ul>
-                    </div>
-
                 <form action="{{ url_for('register') }}" method="post" class="login100-form validate-form">
                     <span class="login100-form-title">
                         New Member Registration
@@ -87,7 +75,18 @@
                             Register
                         </button>
                     </div>
-
+                <div class="centered-block">
+                </div>
+ <div>
+        <ul>
+            <li>-เงื่อนไขรหัสผ่าน-</li>
+            <li>1. ต้องมีความยาวอย่างน้อย 7 ตัวอักษร</li>
+            <li>2. ต้องมีตัวอักษรตัวเล็ก (a-z)</li>
+            <li>3. ต้องมีตัวอักษรตัวใหญ่ (A-Z)</li>
+            <li>4. ต้องมีตัวเลข (0-9)</li>
+            <li>5. ต้องมีสัญลักษณ์พิเศษ เช่น !@#$%^&*</li>
+        </ul>
+        </div>
                     <div class="text-center p-t-12">
                         <span class="txt1">
                             Already have an account?
