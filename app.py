@@ -160,25 +160,48 @@ def reset_password():
         conn = get_db_connection()
         user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
 
-        if user and check_password(user['pin'], pin):  # ตรวจสอบ PIN
-            # ตรวจสอบความซับซ้อนของรหัสผ่านใหม่
-            is_valid, error_message = validate_password(new_password)
-            if not is_valid:
-                flash(error_message, 'error')
-                return render_template('reset_password.html')  # แสดงหน้ารีเซ็ตรหัสผ่านใหม่อีกครั้ง
+        if user:
+            # ตรวจสอบว่าไอดีถูกบล็อกหรือไม่
+            if user['account_locked']:
+                flash('บัญชีของคุณถูกบล็อกเนื่องจากพยายามกรอก PIN ผิดพลาดหลายครั้ง กรุณาติดต่อผู้ดูแลระบบ.', 'error')
+                conn.close()
+                return render_template('reset_password.html')
+            
+            # ตรวจสอบ PIN
+            if check_password(user['pin'], pin):
+                # ตรวจสอบความซับซ้อนของรหัสผ่านใหม่
+                is_valid, error_message = validate_password(new_password)
+                if not is_valid:
+                    flash(error_message, 'error')
+                    return render_template('reset_password.html')  # แสดงหน้ารีเซ็ตรหัสผ่านใหม่อีกครั้ง
 
-            hashed_password = hash_password(new_password)
-            conn.execute('UPDATE users SET password = ?, last_password_change = ? WHERE username = ?',
-                         (hashed_password, datetime.now(), username))
-            conn.commit()
-            flash('เปลี่ยนรหัสผ่านเสร็จสิ้น!')
+                hashed_password = hash_password(new_password)
+                conn.execute('UPDATE users SET password = ?, last_password_change = ?, pin_attempts = 0 WHERE username = ?',
+                             (hashed_password, datetime.now(), username))  # รีเซ็ต pin_attempts เมื่อสำเร็จ
+                conn.commit()
+                flash('เปลี่ยนรหัสผ่านเสร็จสิ้น!')
+            else:
+                # เพิ่มจำนวนครั้งที่พยายามกรอก PIN ผิด
+                attempts = user['pin_attempts'] + 1
+                if attempts >= 5:
+                    # บล็อกบัญชีเมื่อกรอก PIN ผิดครบ 5 ครั้ง
+                    conn.execute('UPDATE users SET account_locked = 1 WHERE username = ?', (username,))
+                    flash('บัญชีของคุณถูกบล็อกเนื่องจากพยายามกรอก PIN ผิดพลาดหลายครั้ง กรุณาติดต่อผู้ดูแลระบบ.', 'error')
+                else:
+                    # เพิ่มจำนวนครั้งที่พยายามและบันทึก
+                    conn.execute('UPDATE users SET pin_attempts = ? WHERE username = ?', (attempts, username))
+                    flash(f'PIN ไม่ถูกต้อง! คุณพยายามผิด {attempts} ครั้ง.', 'error')
+
         else:
-            flash('PIN ไม่ถูกต้อง!', 'error')
+            flash('ไม่พบผู้ใช้งานนี้!', 'error')
 
+        conn.commit()
         conn.close()
         return redirect(url_for('login'))
     
     return render_template('reset_password.html')
+
+
 
 
 # ฟังก์ชันบันทึก log
@@ -210,6 +233,54 @@ def validate_password(password):
     if not re.search(r'[\W_]', password):  # \W หมายถึง non-alphanumeric characters
         return False, 'รหัสผ่านต้องมีสัญลักษณ์พิเศษ'
     return True, ''
+
+# ฟังก์ชันสำหรับปลดบล็อกบัญชี
+@app.route('/unlock_account', methods=['POST'])
+def unlock_account():
+    if 'username' not in session or session['role'] != 'admin':
+        flash('คุณไม่มีสิทธิ์ในการดำเนินการนี้!', 'error')
+        return redirect(url_for('dashboard'))
+
+    username = request.form['username']
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+
+    if user:
+        if user['account_locked']:
+            # ปลดบล็อกบัญชีและรีเซ็ตค่า pin_attempts
+            conn.execute('UPDATE users SET account_locked = 0, pin_attempts = 0 WHERE username = ?', (username,))
+            conn.commit()
+            flash(f'ปลดบล็อกบัญชีของ {username} สำเร็จแล้ว!', 'success')
+        else:
+            flash(f'บัญชีของ {username} ไม่ได้ถูกบล็อก.', 'info')
+    else:
+        flash('ไม่พบผู้ใช้งานนี้!', 'error')
+
+    conn.close()
+    return redirect(url_for('admin_page'))
+
+
+# Route สำหรับหน้า Admin
+@app.route('/admin')
+def admin():
+    if 'username' not in session:
+        return redirect(url_for('login'))  # เปลี่ยนไปยังหน้า login ถ้ายังไม่ได้เข้าสู่ระบบ
+
+    # เชื่อมต่อกับฐานข้อมูล
+    conn = sqlite3.connect('access_control.db')
+    cursor = conn.cursor()
+
+    # ดึงข้อมูลผู้ใช้จากตาราง users
+    cursor.execute("SELECT * FROM users")
+    users = cursor.fetchall()  # ดึงข้อมูลทั้งหมดในตาราง users
+
+    # ปิดการเชื่อมต่อฐานข้อมูล
+    conn.close()
+
+    return render_template('admin.html', users=users)  # ส่งข้อมูลผู้ใช้ไปยังเทมเพลต admin.html
+
+
 
 # รันเซิร์ฟเวอร์
 if __name__ == '__main__':

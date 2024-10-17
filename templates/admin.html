@@ -40,6 +40,9 @@
             background-color: #007bff; 
             color: white; 
         }
+        .alert {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -49,12 +52,38 @@
         <!-- แสดงชื่อผู้ใช้ -->
         <p>ผู้ใช้: {{ session['username'] }}</p>
 
+        <!-- ฟอร์มสำหรับปลดล็อกผู้ใช้ -->
+        <h4>ปลดล็อกบัญชีผู้ใช้</h4>
+        <form action="{{ url_for('unlock_account') }}" method="post">
+            <div class="form-group">
+                <label for="username">กรุณากรอกชื่อผู้ใช้ที่ต้องการปลดล็อก:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">ปลดล็อกบัญชี</button>
+        </form>
+
         <!-- ปุ่ม Logout -->
         <div class="button-container">
             <form action="{{ url_for('logout') }}" method="get">
                 <button type="submit">ออกจากระบบ</button>
             </form>
         </div>
+
+        <!-- แสดงข้อความแจ้งเตือน -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-dismissible fade show" role="alert">
+                    <ul>
+                        {% for category, message in messages %}
+                            <li class="alert alert-{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
 
     <!-- เพิ่ม Bootstrap JS และ jQuery -->
