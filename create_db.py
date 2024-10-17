@@ -14,11 +14,11 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS users (
                     pin TEXT NOT NULL,
                     last_password_change TIMESTAMP NOT NULL,
                     failed_attempts INTEGER DEFAULT 0,
-                    account_locked BOOLEAN DEFAULT 0,
-                    pin_attempts INTEGER DEFAULT 0,
-                    role TEXT NOT NULL DEFAULT 'user',
-                    email TEXT UNIQUE -- เพิ่มฟิลด์อีเมล
+                    account_locked BOOLEAN DEFAULT 0,pin_attempts INTEGER DEFAULT 0,
+                    role TEXT NOT NULL DEFAULT 'user'
                 )''')
+
+
 
 # คำสั่ง SQL สำหรับสร้างตาราง login_log
 cursor.execute('''CREATE TABLE IF NOT EXISTS login_log (

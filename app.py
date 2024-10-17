@@ -22,12 +22,16 @@ def hash_password(password):
 def check_password(stored_password, provided_password):
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
 
+# Register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']  # รับค่าจาก confirm password
         pin = request.form['pin']
+
+
 
         # ตรวจสอบว่าชื่อผู้ใช้ซ้ำหรือไม่
         conn = get_db_connection()
@@ -43,11 +47,16 @@ def register():
         if not is_valid:
             flash(error_message, 'error')
             return render_template('register.html')
+        
+        # ตรวจสอบว่ารหัสผ่านและยืนยันรหัสผ่านตรงกัน
+        if password != confirm_password:
+            flash('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน!', 'error')
+            return render_template('register.html')
 
         hashed_password = hash_password(password)  # เข้ารหัสรหัสผ่าน
         hashed_pin = hash_password(pin)  # เข้ารหัส PIN ก่อนบันทึก
 
-        conn.execute('INSERT INTO users (username, password, pin, last_password_change, role) VALUES (?, ?, ?, ?, ?)',
+        conn.execute('INSERT INTO users (username, password, pin, last_password_change, role) VALUES (?, ?, ?, ?, ?) ',
                      (username, hashed_password, hashed_pin, datetime.now(), 'user'))  # กำหนด role เป็น user
         conn.commit()
         conn.close()
@@ -56,6 +65,7 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
 
 
 # หน้าเข้าสู่ระบบ
