@@ -21,8 +21,12 @@ def hash_password(password):
 # ฟังก์ชันตรวจสอบรหัสผ่าน
 def check_password(stored_password, provided_password):
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
-
+#set home
+@app.route('/')
+def home():
+    return render_template('login.html')
 # Register
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -166,6 +170,7 @@ def reset_password():
         username = request.form['username']
         pin = request.form['pin']  # รับค่า PIN ที่ผู้ใช้กรอก
         new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
         
         conn = get_db_connection()
         user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
@@ -175,6 +180,11 @@ def reset_password():
             if user['account_locked']:
                 flash('บัญชีของคุณถูกบล็อกเนื่องจากพยายามกรอก PIN ผิดพลาดหลายครั้ง กรุณาติดต่อผู้ดูแลระบบ.', 'error')
                 conn.close()
+                return render_template('reset_password.html')
+            
+            # ตรวจสอบว่ารหัสผ่านและยืนยันรหัสผ่านตรงกัน
+            if new_password != confirm_password:
+                flash('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน!', 'error')
                 return render_template('reset_password.html')
             
             # ตรวจสอบ PIN
@@ -201,6 +211,8 @@ def reset_password():
                     # เพิ่มจำนวนครั้งที่พยายามและบันทึก
                     conn.execute('UPDATE users SET pin_attempts = ? WHERE username = ?', (attempts, username))
                     flash(f'PIN ไม่ถูกต้อง! คุณพยายามผิด {attempts} ครั้ง.', 'error')
+
+        
 
         else:
             flash('ไม่พบผู้ใช้งานนี้!', 'error')
@@ -295,7 +307,6 @@ def admin():
 # รันเซิร์ฟเวอร์
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 
