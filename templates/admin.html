@@ -6,7 +6,15 @@
     <title>Admin Page</title>
 </head>
 <body>
-    <h1>ยินดีต้อนรับเข้าสู่หน้า Admin</h1>
-    <!-- แสดงข้อมูลหรือฟังก์ชันที่ admin สามารถทำได้ -->
+    <h1>ยินดีต้อนรับสู่หน้า Admin</h1>
+
+    <!-- แสดงชื่อผู้ใช้ -->
+    <p>ผู้ใช้: {{ session['username'] }}</p>
+
+    <!-- ปุ่ม Logout -->
+    <form action="{{ url_for('logout') }}" method="get">
+        <button type="submit">ออกจากระบบ</button>
+    </form>
+    
 </body>
 </html>

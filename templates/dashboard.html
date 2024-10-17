@@ -19,5 +19,10 @@
     {% else %}
         <button onclick="alert('ปุ่มนี้สำหรับ Admin เท่านั้น!');">ไปที่หน้า Admin</button>
     {% endif %}
+
+    <form action="{{ url_for('logout') }}" method="get">
+        <button type="submit">ออกจากระบบ</button>
+    </form>
+    
 </body>
 </html>

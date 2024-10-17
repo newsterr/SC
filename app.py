@@ -117,8 +117,14 @@ def login():
 
 
 # หน้า Admin
+# หน้า Admin
 @app.route('/admin')
 def admin_page():
+    # ตรวจสอบว่า ผู้ใช้ได้เข้าสู่ระบบหรือไม่
+    if 'username' not in session:
+        flash('กรุณาเข้าสู่ระบบก่อน!', 'error')  # แสดงข้อความแจ้งเตือน
+        return redirect(url_for('login'))  # เปลี่ยนเส้นทางไปยังหน้า login
+
     # ตรวจสอบบทบาทของผู้ใช้
     if 'role' in session and session['role'] == 'admin':
         return render_template('admin.html')  # แสดงหน้า admin.html
@@ -126,11 +132,29 @@ def admin_page():
         flash('คุณไม่มีสิทธิ์เข้าถึงหน้านี้!', 'error')
         return redirect(url_for('dashboard'))  # เปลี่ยนเส้นทางไปยัง dashboard
 
+    
+
+# logout
+@app.route('/logout')
+def logout():
+    session.pop('username', None)  # ลบข้อมูลผู้ใช้จากเซสชัน
+    session.pop('role', None)       # ลบข้อมูล role ของผู้ใช้จากเซสชัน
+    flash('คุณได้ออกจากระบบเรียบร้อยแล้ว!', 'success')
+    return redirect(url_for('login'))
+
 
 # หน้า Dashboard
 @app.route('/dashboard')
 def dashboard():
+    # ตรวจสอบว่า ผู้ใช้ได้เข้าสู่ระบบหรือไม่
+    if 'username' not in session:
+        flash('กรุณาเข้าสู่ระบบก่อน!', 'error')  # แสดงข้อความแจ้งเตือน
+        return redirect(url_for('login'))  # เปลี่ยนเส้นทางไปยังหน้า login
+    
     return render_template('dashboard.html')  # แสดงหน้า dashboard.html
+
+
+
 
 
 # ระบบรีเซ็ตรหัสผ่าน
