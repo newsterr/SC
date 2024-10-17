@@ -4,44 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Page</title>
+    <!-- เพิ่ม Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- เพิ่มฟอนต์ Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e9ecef; 
+            font-family: 'Sarabun', sans-serif; 
+        }
+        .container {
+            max-width: 500px; 
+            margin-top: 50px; 
+            padding: 30px; 
+            background-color: white; 
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
+            border: 1px solid #dee2e6; 
+        }
+        h1 {
+            text-align: center; 
+            margin-bottom: 20px; 
+            color: #007bff; 
+        }
+        .form-group {
+            margin-bottom: 15px; 
+        }
+        .btn-primary {
+            background-color: #007bff; 
+            border: none; 
+            transition: background-color 0.3s ease; 
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; 
+        }
+        h3 {
+            margin-top: 20px; 
+            color: #333; 
+        }
+        ul {
+            list-style-type: none; 
+            padding-left: 0; /
+        }
+        .alert {
+            margin-top: 20px; 
+            padding: 10px; 
+        }
+    </style>
 </head>
 <body>
-    <h1>ลงทะเบียน</h1>
+    <div class="container">
+        <h1>ลงทะเบียน</h1>
 
-    <form action="/register" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
+        <form action="/register" method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
 
-         <!-- เพิ่มช่องกรอก PIN -->
-        <label for="pin">PIN (4 digits):</label>
-        <input type="text" id="pin" name="pin" pattern="\d{4}" maxlength="4" required><br><br>
+            <div class="form-group">
+                <!-- เพิ่มช่องกรอก PIN -->
+                <label for="pin">PIN (4 digits):</label>
+                <input type="text" id="pin" name="pin" pattern="\d{4}" maxlength="4" class="form-control" required>
+            </div>
 
+            <button type="submit" class="btn btn-primary btn-block">ลงทะเบียน</button>
+        </form>
 
-        <input type="submit" value="ลงทะเบียน">
-    </form>
-
-    <!-- แสดงข้อความเงื่อนไขรหัสผ่าน -->
-    <h3>เงื่อนไขรหัสผ่าน</h3>
-    <ul>
-        <li>ต้องมีความยาวอย่างน้อย 7 ตัวอักษร</li>
-        <li>ต้องมีตัวอักษรตัวเล็ก (a-z)</li>
-        <li>ต้องมีตัวอักษรตัวใหญ่ (A-Z)</li>
-        <li>ต้องมีตัวเลข (0-9)</li>
-        <li>ต้องมีสัญลักษณ์พิเศษ เช่น !@#$%^&*</li>
-    </ul>
-
-    <!-- แสดง flash messages -->
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
+        <h3>เงื่อนไขรหัสผ่าน</h3>
         <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
+            <li>ต้องมีความยาวอย่างน้อย 7 ตัวอักษร</li>
+            <li>ต้องมีตัวอักษรตัวเล็ก (a-z)</li>
+            <li>ต้องมีตัวอักษรตัวใหญ่ (A-Z)</li>
+            <li>ต้องมีตัวเลข (0-9)</li>
+            <li>ต้องมีสัญลักษณ์พิเศษ เช่น !@#$%^&*</li>
         </ul>
-      {% endif %}
-    {% endwith %}
+
+        <!-- แสดง flash messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="alert alert-warning">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- เพิ่ม Bootstrap JS และ jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
