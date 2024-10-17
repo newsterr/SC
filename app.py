@@ -211,6 +211,8 @@ def reset_password():
                     # เพิ่มจำนวนครั้งที่พยายามและบันทึก
                     conn.execute('UPDATE users SET pin_attempts = ? WHERE username = ?', (attempts, username))
                     flash(f'PIN ไม่ถูกต้อง! คุณพยายามผิด {attempts} ครั้ง.', 'error')
+                    return render_template('reset_password.html')
+
 
         
 
