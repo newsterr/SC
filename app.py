@@ -165,6 +165,12 @@ def reset_password():
         user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
 
         if user and check_password(user['pin'], pin):  # ตรวจสอบ PIN
+            # ตรวจสอบความซับซ้อนของรหัสผ่านใหม่
+            is_valid, error_message = validate_password(new_password)
+            if not is_valid:
+                flash(error_message, 'error')
+                return render_template('reset_password.html')  # แสดงหน้ารีเซ็ตรหัสผ่านใหม่อีกครั้ง
+
             hashed_password = hash_password(new_password)
             conn.execute('UPDATE users SET password = ?, last_password_change = ? WHERE username = ?',
                          (hashed_password, datetime.now(), username))
@@ -177,6 +183,7 @@ def reset_password():
         return redirect(url_for('login'))
     
     return render_template('reset_password.html')
+
 
 
 
