@@ -22,14 +22,21 @@ def hash_password(password):
 def check_password(stored_password, provided_password):
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
 
-# หน้าลงทะเบียนผู้ใช้ใหม่
-# ตัวอย่าง register view ที่เพิ่ม default role เป็น user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         pin = request.form['pin']
+
+        # ตรวจสอบว่าชื่อผู้ใช้ซ้ำหรือไม่
+        conn = get_db_connection()
+        existing_user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+        
+        if existing_user:
+            flash('ชื่อผู้ใช้นี้มีอยู่แล้ว กรุณาเลือกชื่อผู้ใช้ใหม่.', 'error')
+            conn.close()
+            return render_template('register.html')
 
         # ตรวจสอบความซับซ้อนของรหัสผ่าน
         is_valid, error_message = validate_password(password)
@@ -40,16 +47,16 @@ def register():
         hashed_password = hash_password(password)  # เข้ารหัสรหัสผ่าน
         hashed_pin = hash_password(pin)  # เข้ารหัส PIN ก่อนบันทึก
 
-        conn = get_db_connection()
         conn.execute('INSERT INTO users (username, password, pin, last_password_change, role) VALUES (?, ?, ?, ?, ?)',
                      (username, hashed_password, hashed_pin, datetime.now(), 'user'))  # กำหนด role เป็น user
         conn.commit()
         conn.close()
 
-        flash('ลงทะเบียนเสร็จสิ้น!')
+        flash('ลงทะเบียนผู้ใช้สำเร็จ!')
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
 
 
 
