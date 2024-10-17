@@ -4,17 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
+    <!-- เพิ่ม Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- เพิ่มฟอนต์ Sarabun จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; 
+            font-family: 'Sarabun', sans-serif; 
+        }
+        h1 {
+            text-align: center; 
+            margin-top: 30px; 
+            color: #007bff; 
+        }
+        .container {
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+        }
+        .button-container {
+            margin-top: 20px; 
+        }
+        button {
+            width: 100%; 
+            padding: 10px; 
+            border: none; 
+            border-radius: 5px; 
+            transition: background-color 0.3s ease; 
+        }
+        button:hover {
+            background-color: #007bff; 
+            color: white; 
+        }
+    </style>
 </head>
 <body>
-    <h1>ยินดีต้อนรับสู่หน้า Admin</h1>
+    <div class="container">
+        <h1>Admin</h1>
 
-    <!-- แสดงชื่อผู้ใช้ -->
-    <p>ผู้ใช้: {{ session['username'] }}</p>
+        <!-- แสดงชื่อผู้ใช้ -->
+        <p>ผู้ใช้: {{ session['username'] }}</p>
 
-    <!-- ปุ่ม Logout -->
-    <form action="{{ url_for('logout') }}" method="get">
-        <button type="submit">ออกจากระบบ</button>
-    </form>
+        <!-- ปุ่ม Logout -->
+        <div class="button-container">
+            <form action="{{ url_for('logout') }}" method="get">
+                <button type="submit">ออกจากระบบ</button>
+            </form>
+        </div>
+    </div>
 
+    <!-- เพิ่ม Bootstrap JS และ jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

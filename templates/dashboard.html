@@ -4,35 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- เพิ่ม Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- เพิ่มฟอนต์ Sarabun จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* เพิ่มระยะห่างระหว่างปุ่ม */
+        body {
+            background-color: #f8f9fa; 
+            font-family: 'Sarabun', sans-serif; 
+        }
+        h1 {
+            text-align: center; 
+            margin-top: 30px; 
+            color: #007bff; 
+        }
+        .container {
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+        }
         .button-container {
-            margin-bottom: 20px; /* ระยะห่างด้านล่าง */
+            margin-bottom: 20px; 
+        }
+        button {
+            width: 100%; 
+            padding: 10px; 
+            border: none; 
+            border-radius: 5px; 
+            transition: background-color 0.3s ease; 
+        }
+        button:hover {
+            background-color: #007bff; 
+            color: white; 
+        }
+        button[disabled] {
+            background-color: #cccccc; 
+            color: #666666; 
         }
     </style>
 </head>
 <body>
-    <h1>ยินดีต้อนรับสู่ Dashboard</h1>
+    <div class="container">
+        <h1>Dashboard</h1>
 
-    <!-- แสดงชื่อผู้ใช้ -->
-    <p>ผู้ใช้: {{ session['username'] }}</p>
+        <!-- แสดงชื่อผู้ใช้ -->
+        <p>ผู้ใช้: {{ session['username'] }}</p>
 
-    <!-- ปุ่มสำหรับไปยังหน้า admin (แสดงเฉพาะถ้าเป็น admin) -->
-    <div class="button-container">
-        {% if session['role'] == 'admin' %}
-            <form action="{{ url_for('admin_page') }}" method="get">
-                <button type="submit">ไปที่หน้า Admin</button>
+        <!-- ปุ่มสำหรับไปยังหน้า admin (แสดงเฉพาะถ้าเป็น admin) -->
+        <div class="button-container">
+            {% if session['role'] == 'admin' %}
+                <form action="{{ url_for('admin_page') }}" method="get">
+                    <button type="submit">ไปที่หน้า Admin</button>
+                </form>
+            {% else %}
+                <button onclick="alert('ปุ่มนี้สำหรับ Admin เท่านั้น!');" disabled>ไปที่หน้า Admin</button>
+            {% endif %}
+        </div>
+
+        <div class="button-container">
+            <form action="{{ url_for('logout') }}" method="get">
+                <button type="submit">ออกจากระบบ</button>
             </form>
-        {% else %}
-            <button onclick="alert('ปุ่มนี้สำหรับ Admin เท่านั้น!');">ไปที่หน้า Admin</button>
-        {% endif %}
+        </div>
     </div>
 
-    <div class="button-container">
-        <form action="{{ url_for('logout') }}" method="get">
-            <button type="submit">ออกจากระบบ</button>
-        </form>
-    </div>
-    
+    <!-- เพิ่ม Bootstrap JS และ jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
