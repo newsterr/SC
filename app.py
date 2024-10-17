@@ -21,8 +21,11 @@ def hash_password(password):
 # ฟังก์ชันตรวจสอบรหัสผ่าน
 def check_password(stored_password, provided_password):
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
-
+@app.route('/')
+def home():
+    return render_template('login.html')
 # Register
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
