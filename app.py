@@ -117,7 +117,6 @@ def login():
 
 
 # หน้า Admin
-# หน้า Admin
 @app.route('/admin')
 def admin_page():
     # ตรวจสอบว่า ผู้ใช้ได้เข้าสู่ระบบหรือไม่
@@ -154,9 +153,6 @@ def dashboard():
     return render_template('dashboard.html')  # แสดงหน้า dashboard.html
 
 
-
-
-
 # ระบบรีเซ็ตรหัสผ่าน
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
@@ -173,7 +169,7 @@ def reset_password():
             conn.execute('UPDATE users SET password = ?, last_password_change = ? WHERE username = ?',
                          (hashed_password, datetime.now(), username))
             conn.commit()
-            flash('Password reset successfully!')
+            flash('เปลี่ยนรหัสผ่านเสร็จสิ้น!')
         else:
             flash('PIN ไม่ถูกต้อง!', 'error')
 
