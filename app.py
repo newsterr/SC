@@ -58,9 +58,6 @@ def register():
     return render_template('register.html')
 
 
-
-
-
 # หน้าเข้าสู่ระบบ
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -91,7 +88,7 @@ def login():
                 conn.execute('UPDATE users SET failed_attempts = 0 WHERE username = ?', (username,))
                 conn.commit()
                 
-                flash('เข้าสู่ระบบสำเร็จ!', 'success')
+                #flash('เข้าสู่ระบบสำเร็จ!', 'success')
                 log_login(username, True)  # บันทึก log การเข้าสู่ระบบ
                 conn.close()
                 return redirect(url_for('dashboard'))
@@ -130,7 +127,6 @@ def admin_page():
     else:
         flash('คุณไม่มีสิทธิ์เข้าถึงหน้านี้!', 'error')
         return redirect(url_for('dashboard'))  # เปลี่ยนเส้นทางไปยัง dashboard
-
     
 
 # logout
@@ -185,8 +181,6 @@ def reset_password():
     return render_template('reset_password.html')
 
 
-
-
 # ฟังก์ชันบันทึก log
 def log_login(username, success):
     conn = get_db_connection()
@@ -194,7 +188,6 @@ def log_login(username, success):
                  (username, datetime.now(), success))
     conn.commit()
     conn.close()
-
 
 
 # ฟังก์ชันตรวจสอบการหมดอายุของรหัสผ่าน
