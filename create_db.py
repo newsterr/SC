@@ -10,9 +10,15 @@ cursor = conn.cursor()
 cursor.execute('''CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     username TEXT NOT NULL UNIQUE,
-                    password TEXT NOT NULL,pin TEXT NOT NULL,
-                    last_password_change TIMESTAMP NOT NULL
+                    password TEXT NOT NULL,
+                    pin TEXT NOT NULL,
+                    last_password_change TIMESTAMP NOT NULL,
+                    failed_attempts INTEGER DEFAULT 0,
+                    account_locked BOOLEAN DEFAULT 0,
+                    role TEXT NOT NULL DEFAULT 'user'
                 )''')
+
+
 
 # คำสั่ง SQL สำหรับสร้างตาราง login_log
 cursor.execute('''CREATE TABLE IF NOT EXISTS login_log (
