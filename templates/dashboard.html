@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <style>
+        /* เพิ่มระยะห่างระหว่างปุ่ม */
+        .button-container {
+            margin-bottom: 20px; /* ระยะห่างด้านล่าง */
+        }
+    </style>
 </head>
 <body>
     <h1>ยินดีต้อนรับสู่ Dashboard</h1>
@@ -12,17 +18,21 @@
     <p>ผู้ใช้: {{ session['username'] }}</p>
 
     <!-- ปุ่มสำหรับไปยังหน้า admin (แสดงเฉพาะถ้าเป็น admin) -->
-    {% if session['role'] == 'admin' %}
-        <form action="{{ url_for('admin_page') }}" method="get">
-            <button type="submit">ไปที่หน้า Admin</button>
-        </form>
-    {% else %}
-        <button onclick="alert('ปุ่มนี้สำหรับ Admin เท่านั้น!');">ไปที่หน้า Admin</button>
-    {% endif %}
+    <div class="button-container">
+        {% if session['role'] == 'admin' %}
+            <form action="{{ url_for('admin_page') }}" method="get">
+                <button type="submit">ไปที่หน้า Admin</button>
+            </form>
+        {% else %}
+            <button onclick="alert('ปุ่มนี้สำหรับ Admin เท่านั้น!');">ไปที่หน้า Admin</button>
+        {% endif %}
+    </div>
 
-    <form action="{{ url_for('logout') }}" method="get">
-        <button type="submit">ออกจากระบบ</button>
-    </form>
+    <div class="button-container">
+        <form action="{{ url_for('logout') }}" method="get">
+            <button type="submit">ออกจากระบบ</button>
+        </form>
+    </div>
     
 </body>
 </html>
