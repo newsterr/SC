@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+</head>
+<body>
+    <h1>ลงทะเบียน</h1>
+
+    <form action="/register" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+         <!-- เพิ่มช่องกรอก PIN -->
+        <label for="pin">PIN (4 digits):</label>
+        <input type="text" id="pin" name="pin" pattern="\d{4}" maxlength="4" required><br><br>
+
+
+        <input type="submit" value="ลงทะเบียน">
+    </form>
+
+    <!-- แสดงข้อความเงื่อนไขรหัสผ่าน -->
+    <h3>เงื่อนไขรหัสผ่าน</h3>
+    <ul>
+        <li>ต้องมีความยาวอย่างน้อย 7 ตัวอักษร</li>
+        <li>ต้องมีตัวอักษรตัวเล็ก (a-z)</li>
+        <li>ต้องมีตัวอักษรตัวใหญ่ (A-Z)</li>
+        <li>ต้องมีตัวเลข (0-9)</li>
+        <li>ต้องมีสัญลักษณ์พิเศษ เช่น !@#$%^&*</li>
+    </ul>
+
+    <!-- แสดง flash messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

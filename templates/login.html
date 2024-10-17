@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <h2>เข้าสู่ระบบ</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for category, message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <form action="{{ url_for('login') }}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">เข้าสู่ระบบ</button>
+        </form>
+        <br>
+        
+        <!-- เพิ่มปุ่มลืมรหัสผ่าน -->
+        <form action="{{ url_for('reset_password') }}" method="get">
+            <button type="submit">ลืมรหัสผ่าน?</button>
+        </form>
+        <br>
+        
+        <!-- เพิ่มปุ่มลงทะเบียน -->
+        <form action="{{ url_for('register') }}" method="get">
+            <button type="submit">ลงทะเบียน</button>
+        </form>
+    </div>
+</body>
+</html>
